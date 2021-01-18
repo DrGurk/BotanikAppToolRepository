@@ -256,14 +256,14 @@ public class Controller {
                                 boolean flag = true;
                                 int count = 0;
                                 while(flag){
-                                    File check = new File("bilder" + File.separator + str + "_" + count);
+                                    File check = new File("bilder" + File.separator + str + File.separator + str + "_" + count);
                                     if (!check.exists()){
                                         flag = false;
                                     } else{
                                         count++;
                                     }
                                 }
-                                File dest = new File("bilder" + File.separator + str + "_" + count);
+                                File dest = new File("bilder" + File.separator + str  + File.separator + str + "_" + count);
                                 try {
                                     Files.copy(file.toPath(), dest.toPath());
                                 }catch(Exception ex){

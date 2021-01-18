@@ -36,7 +36,7 @@
         <repository>
             <id>internal.repo</id>
             <name>Internal repo</name>
-            <url>file:///home/dr_gurk/java</url>
+            <url>file:///D:/deploy/</url>
         </repository>
     </distributionManagement>
 

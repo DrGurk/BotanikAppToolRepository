@@ -20,7 +20,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="BotanikAppTool" target="15" />
+      <module name="BotanikAppTool" target="8" />
     </bytecodeTargetLevel>
   </component>
 </project>
