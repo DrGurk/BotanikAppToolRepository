@@ -8,7 +8,7 @@
 <?import javafx.scene.text.*?>
 <?import org.controlsfx.control.*?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller" >
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -115,7 +115,7 @@
                                     <RowConstraints minHeight="10.0" percentHeight="20.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <TextFlow prefHeight="175.0" prefWidth="200.0" GridPane.columnIndex="1">
+                                    <TextFlow prefHeight="175.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                        <children>
                                           <TextField fx:id="question" prefHeight="25.0" prefWidth="200.0" text="Frage?" />
                                        </children>
@@ -128,24 +128,19 @@
                                     </TextFlow>
                                     <VBox prefHeight="200.0" prefWidth="100.0">
                                        <children>
-                                          <Label text="Frage auswählen" />
-                                          <ChoiceBox fx:id="questionSelect" prefWidth="150.0" />
+                                          <Label fx:id="plantNameTab" prefHeight="40.0" prefWidth="201.0" text="keine Auswahl" textAlignment="CENTER" wrapText="true">
+                                             <font>
+                                                <Font size="19.0" />
+                                             </font>
+                                          </Label>
                                           <TextField fx:id="newQuestionText" />
                                           <Button fx:id="newQuestion" mnemonicParsing="false" prefHeight="25.0" prefWidth="114.0" text="Neu" />
                                           <Button fx:id="removeQuestion" mnemonicParsing="false" prefHeight="25.0" prefWidth="113.0" text="Entfernen" />
                                        </children>
                                     </VBox>
+                                    <ListView fx:id="questionSelect" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" />
                                  </children>
                               </GridPane>
-                           </content>
-                        </Tab>
-                        <Tab closable="false" text="Beschreibung">
-                           <content>
-                              <TextFlow prefHeight="200.0" prefWidth="200.0">
-                                 <children>
-                                    <TextArea prefHeight="507.0" prefWidth="432.0" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque consectetur fermentum ornare. Sed blandit velit massa, vel gravida justo mattis ac. In fermentum purus at nibh imperdiet, id pellentesque velit convallis. Ut eu ligula justo. Duis a enim iaculis, dignissim leo eget, sodales sapien. Vivamus ornare, magna quis tempus mollis, est nisl gravida nisi, non congue magna purus id ipsum. Nulla efficitur tellus nisi. Phasellus eu convallis elit. Nunc congue lacinia sapien, non porttitor purus euismod et. Sed nibh nisl, tristique molestie urna non, ultricies tristique risus. Ut sit amet quam ac nisl viverra efficitur. Maecenas sollicitudin laoreet mauris at luctus. In hac habitasse platea dictumst. " wrapText="true" />
-                                 </children>
-                              </TextFlow>
                            </content>
                         </Tab>
                      </tabs>

@@ -65,7 +65,7 @@ public class Controller {
     @FXML
     ChoiceBox imageSelector;
     @FXML
-    ChoiceBox<TriviaQuestionData> questionSelect;
+    ListView<TriviaQuestionData> questionSelect;
 
     @FXML
     TextField question;
@@ -99,6 +99,8 @@ public class Controller {
     @FXML
     MenuItem menuAndroid;
 
+    @FXML
+    Label plantNameTab;
     @FXML
     public void initialize(){
         plantSelect.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<PlantInfo>() {
@@ -297,8 +299,11 @@ public class Controller {
                                 alert.showAndWait();
                                 return;
                             }
-                            pi.triviaQuestions.add(new TriviaQuestionData(newQuestionText.getText()));
-                            updateQuestionList(pi);
+                            var aux = new TriviaQuestionData(newQuestionText.getText());
+                            pi.triviaQuestions.add(aux);
+                            var aux2 = plantSelect.getSelectionModel().getSelectedItem();
+                            loadPlant(aux2);
+                            updateQuestionList(aux2);
                         } else{
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
                             alert.setTitle("Keine Pflanze ausgewählt!");
@@ -410,6 +415,7 @@ public class Controller {
             int tmp = DatabaseLoader.getTagIndex(s);
             tagCheckList.getCheckModel().check(tmp);
         }
+        plantNameTab.setText(pi.name);
         /*
         tagCheckList.getCheckModel().getCheckedItems().addListener(new ListChangeListener() {
             public void onChanged(ListChangeListener.Change c) {
