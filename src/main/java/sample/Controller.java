@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Locale;
 import java.util.Vector;
 
 
@@ -595,15 +596,21 @@ public class Controller {
             for (PlantInfo pi : DatabaseLoader.plants) {
                 int count = 0;
                 String s = pi.name + "_";
-                for (String img : pi.images) {
-                    Path p1 = Paths.get(img.substring(6));
-                    Path p2 = Paths.get(path + File.separator + s + count+ ".jpg");
-                    Files.copy(p1, p2);
-                }
+                File imageDir = new File("bilder" + File.separator + pi.name);
+                File[] loop = imageDir.listFiles();
+                try {
+                    for (File img : loop) {
+                        try {
+                            Path p1 = img.toPath();
+                            Path p2 = Paths.get(path + File.separator + androidString(s) + count + ".jpg");
+                            Files.copy(p1, p2);
+                        } catch (Exception e) {
+                            System.err.println("test");
+                        }
+                    }
+                } catch(Exception e){}
             }
-        } catch(IOException e){
-            System.err.println("IOEXception copy");
-            e.printStackTrace();
+        } catch(Exception e){
         }
     }
     public void commonSetup(){
@@ -616,46 +623,54 @@ public class Controller {
             }
         }
     }
+    public String androidString(String in){
+        return in.replace("ä", "ae").replace("ö","oe").replace("ü", "ue").replace(" ", "_").replace("(", "_").replace(')', '_').replace("-", "_").replace(",", "_").replace('.', '_').replace("ß", "ss").toLowerCase();
+    }
     public void setupRaw(String path){
-        try {
             File dir = new File(path);
             dir.mkdir();
             for (PlantInfo pi : DatabaseLoader.plants) {
-                int count = 0;
-                String s = "questions_" + pi.name;
-                String d = "description_" + pi.name;
-                FileWriter file = new FileWriter("android" + File.separator + "raw" + File.separator + s);
-                for(int i = 0; i < pi.triviaQuestions.size(); ++i){
-                    TriviaQuestionData q = pi.triviaQuestions.elementAt(i);
-                    file.write(q.question + "\n");
-                    file.write(q.correctAnswer + "\n");
-                    for(String str: q.wrongAnswers){
-                        file.write(str + "\n");
+                try {
+                    int count = 0;
+                    String s = "questions_" + androidString(pi.name);
+                    String d = "description_" + androidString(pi.name);
+                    FileWriter file = new FileWriter("android" + File.separator + "raw" + File.separator + s);
+                    for (int i = 0; i < pi.triviaQuestions.size(); ++i) {
+                        TriviaQuestionData q = pi.triviaQuestions.elementAt(i);
+                        file.write(q.question + "\n");
+                        file.write(q.correctAnswer + "\n");
+                        for (String str : q.wrongAnswers) {
+                            file.write(str + "\n");
+                        }
+                        if (i != pi.triviaQuestions.size() - 1) {
+                            file.write("Q\n");
+                        }
                     }
-                    if(i != pi.triviaQuestions.size() - 1){
-                        file.write("Q\n");
-                    }
+                    file.close();
+                    file = new FileWriter("android" + File.separator + "raw" + File.separator + d);
+                    file.write(pi.description);
+                    file.close();
+                }catch(Exception e){
                 }
-                file.close();
-                file = new FileWriter("android" +  File.separator + "raw" + File.separator + d);
-                file.write(pi.description);
-                file.close();
             }
+            try{
             FileWriter file2 = new FileWriter("android" + File.separator + "raw" + File.separator + "tags");
             for(Tag t: DatabaseLoader.tags){
-                file2.write(t.name + "\n");
-                String s = "tag_" +t.name.toLowerCase();
-                FileWriter file = new FileWriter("android" + File.separator + "raw" + File.separator + s);
-                file.write(t.question + "\n");
-                for(String hold: t.holders){
-                    file.write(hold + "\n");
+                try {
+                    System.out.println(t.name);
+                    file2.write(t.name + "\n");
+                    String s = "tag_" + androidString(t.name);
+                    FileWriter file = new FileWriter("android" + File.separator + "raw" + File.separator + s);
+                    file.write(t.question + "\n");
+                    for (String hold : t.holders) {
+                        file.write(hold + "\n");
+                    }
+                    file.close();
                 }
-                file.close();
+                catch (Exception e){}
             }
             file2.close();
-        } catch(IOException e){
-            System.err.println("IOEXception  raw");
-            e.printStackTrace();
+        } catch(Exception e){
         }
     }
     void ScanImages(){
@@ -669,15 +684,16 @@ public class Controller {
             }
         });
         for(String s : directories){
-            File subdirs = new File("bilder" + File.separator + s);
-            int id = DatabaseLoader.getPlantIndex(s);
+            var androidString = androidString(s);
+            File subdirs = new File("bilder" + File.separator + androidString);
+            int id = DatabaseLoader.getPlantIndex(androidString);
             File[] imageList = subdirs.listFiles();
             if(id == -1){
                 return;
             }
             DatabaseLoader.plants.elementAt(id).images.clear();
             int count = 0;
-            String tmpstr = "bilder" + File.separator + s + File.separator + "tmp";
+            String tmpstr = "bilder" + File.separator + androidString + File.separator + "tmp";
             File tmp = new File(tmpstr);
             tmp.mkdir();
             for(File imgs : imageList){
@@ -688,7 +704,10 @@ public class Controller {
                     if (i > 0) {
                         extension = imgs.toPath().toString().substring(i);
                     }
-                    Files.move(imgs.toPath(), new File(tmpstr + File.separator + s + "_" + count++ + extension).toPath());
+                    if(extension == ""){
+                        extension = "jpg";
+                    }
+                    Files.move(imgs.toPath(), new File(tmpstr + File.separator + androidString + "_" + count++ + extension).toPath());
                 } catch (Exception ex){
                     ex.printStackTrace();
                 }
@@ -704,7 +723,7 @@ public class Controller {
                     if (i > 0) {
                         extension = imgs.getName().substring(i);
                     }
-                    Files.move(imgs.toPath(), new File("bilder" + File.separator + s + File.separator + s + "_" + count + extension).toPath());
+                    Files.move(imgs.toPath(), new File("bilder" + File.separator + androidString + File.separator + androidString + "_" + count + extension).toPath());
                     DatabaseLoader.plants.elementAt(id).images.add(s + "_" + count++ + extension);
                 } catch (Exception ex){
                     ex.printStackTrace();
